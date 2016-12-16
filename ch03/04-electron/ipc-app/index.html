@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<title>IPC Test</title>
+<script>
+
+// 모듈 로드 
+var electron = require('electron');
+
+// IPC통신 수행
+var ipc = electron.ipcRenderer;
+var info;
+
+window.onload = function () {
+  info = document.getElementById('info');
+  testSync();
+  testASync();
+};
+
+// 동기적 송신 수행 
+function testSync() {
+  // 메인 프로세스에 인자를 송신하여 결과를 획득
+  var res = ipc.sendSync('mul-sync', {a:30, b:2});
+  msg("sync result=" + res);
+}
+
+// 비동기적 송신 수행 
+function testASync() {
+  // 메인 프로세스에 인자를 송신
+  ipc.send('mul-async', {a:30, b:2});
+  
+  // 비동기 통신으로 결과를 받았을 때
+  ipc.on('mul-async-reply', function(evt, arg) {
+    msg("async result=" + arg);
+  });
+}
+
+function msg(msg) {
+  info.innerHTML += msg + "<br>";
+}
+</script>
+</head><body>
+  <h1>IPC TEST</h1>
+  <p id="info"></p>
+</body></html>

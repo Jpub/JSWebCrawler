@@ -1,0 +1,31 @@
+<html><head>
+  <!-- Google Charts 사용 -->
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <!-- 기온 데이터 읽기 -->
+  <script type="text/javascript" src="SURFACE_ASOS_108_DAY_2014_2014_2015_EMA.js"></script>
+  <script type="text/javascript">
+    // Charts API 초기화 
+    google.load('visualization', '1.1', {packages: ['line']});
+    google.setOnLoadCallback(drawChart);
+    // 그래프 그리기 
+    function drawChart() {
+      // 데이터 오브젝트 생성
+      var data = new google.visualization.DataTable();
+      // 데이터 컬럼 지정 ----- (*1)
+      data.addColumn('string', '일자');
+      data.addColumn('number', '평균온도');
+      data.addColumn('number', '지수평균');
+      // 값 설정 ---- (*2)
+      data.addRows(temperature_data);
+      // 그래프 옵션 
+      var options = {
+        width: 800, height: 400
+      };
+      // 그리기
+      var chart = new google.charts.Line(document.getElementById('chart'));
+      chart.draw(data, options);
+    }
+  </script>
+</head>
+<body><div id="chart"></div></body>
+</html>

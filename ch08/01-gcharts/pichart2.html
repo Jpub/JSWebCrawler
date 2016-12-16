@@ -1,0 +1,42 @@
+﻿<html><head><meta chartset="utf-8"> 
+<script type="text/javascript" src="https://www.google.com/jsapi"></script> 
+<script type="text/javascript">  
+
+// 라이브러리 읽어들임  
+google.load('visualization', '1.0', {'packages':['corechart']});  
+google.setOnLoadCallback(drawChart);  
+
+// 차트 그리기 실행  
+function drawChart() {    
+
+	// 데이터 설정    
+	var data = new google.visualization.DataTable();    
+	data.addColumn('string', '인물');    
+	data.addColumn('number', '취득표');    
+	data.addRows([     
+		['송중기', 51],      
+		['강동원', 34],
+		['유아인 ',20],      
+		['김수현', 11],      
+		['이민호', 8],      
+		['김우빈', 4],    
+	]);    
+
+	// 그래프 옵션 지정 ------- (※1)   
+	var opt = {      
+		'title': '인기투표',      
+		'width':  600,      
+		'height': 400,      
+		pieSliceText: 'value',  // 그래프 안에 표시할 값      
+		legend: {               // 그래프 범례 설정        
+			position: 'right',        
+			textStyle: {color: 'blue', fontSize: 16}      
+		}    
+	};    
+
+	// 그래프 표시   
+	var chart = new google.visualization.PieChart(document.getElementById('chart_div'));    
+	chart.draw(data, opt);  
+} 
+</script> </head>
+<body><div id="chart_div"></div></body></html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></head><body>
+<!-- D3.js를 읽어들임  -->
+<script type="text/javascript" src="./d3.min.js"></script>
+<script>
+  // 데이터 일람
+  var dataset = [30, 25, 44, 21, 30, 50];
+
+  // 그릴 영역을 만듬
+  var svg_width = 600, svg_height = 400;
+  var svg = d3.select("body")
+    .append("svg")
+    .attr( {"width":svg_width, "height":svg_height});
+
+  // 스케일 자동 계산 ---- (※1)
+  var x_scale = d3.scale.linear()
+    .domain([0, d3.max(dataset)]) // 데이터 폭 ---- (※2)
+    .range([0, svg_width]);       // 실제 그려질 사이즈 ---- (※3)
+  
+  // 막대 높이 계산
+  var bar_h = svg_height / dataset.length;
+
+  // 그래프 그리기
+  svg.selectAll("rect")
+    .data(dataset)
+    .enter()
+    .append("rect")
+    .attr({
+      x      : 0,
+      width  : function(d, i) { return x_scale(d); }, // ----(*4)
+      y      : function(d, i) { return i * bar_h; },
+      height : bar_h - 5,
+      fill   : "blue"
+    });
+</script>
+</body></html>
+

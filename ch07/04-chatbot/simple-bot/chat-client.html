@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html><meta charset="utf-8"><body>
+<h3>Chat Client</h3>
+<!-- 유저 메시지 전송 폼 -->
+<div>
+  메시지: 
+  <input id="msg" type="text" value="안녕하세요" size="40">
+  <button id="talk_btn">전송</button>
+</div>
+<hr>
+<!-- 로그 표시 -->
+<div id="log" style="margin:24px;"></div>
+
+<script type="text/javascript">
+// 서버 API 주소  ----(*1)
+var api = "/api?";
+
+// 버튼 클릭 시 이벤트 핸들러 지정 
+$("#talk_btn").onclick = sendMsg;
+
+//클릭 시의 처리  --- (*2)
+function sendMsg() {
+  // 메시지를 얻어와서 파라미터를 구성
+  var msg = $("#msg").value;
+  var url = api + "msg=" + encodeURIComponent(msg);
+  // Ajax로API로 메시지 송신 --- (*3)
+  $ajax(url, function(xhr, txt) {
+    // 서버로부터의 회신을 로그에 표시 
+    $("#msg").value = "";
+    $("#msg").focus();
+    var e = JSON.parse(txt);
+    // 유저의 메시지
+    var p_you = document.createElement("p");
+    p_you.innerHTML = "유저 &gt; " + msg + "<hr>";
+    // 채팅봇의 회신 
+    var p_bot = document.createElement("p");
+    p_bot.innerHTML = "채팅봇 &gt; " + e["msg"] + "<hr>";
+    p_bot.style.backgroundColor = "#e0f0ff";
+    // 로그에 추가 
+    var log = $("#log");
+    log.insertBefore(p_you, log.firstChild);
+    log.insertBefore(p_bot, p_you);
+  });
+}
+
+// DOM 반환
+function $(q) { return document.querySelector(q); }
+
+// Ajax함수 --- (*4)
+function $ajax(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) { //통신완료
+      if (xhr.status == 200) { //HTTP status 200
+        callback(xhr, xhr.responseText);
+      } 
+    }
+  };
+  xhr.send(''); // 통신 개시 
+  return xhr;
+}
+</script>
+</body></html>
+

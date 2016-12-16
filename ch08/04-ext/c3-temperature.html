@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+  <!-- 라이브러리 읽어들임  -->
+  
+<link href="lib/c3/c3.min.css" rel="stylesheet" type="text/css">
+  <script src="lib/d3.min.js"></script>
+  <script src="lib/c3/c3.min.js"></script>
+  <!-- 기온데이터 -->
+  <script src="SURFACE_ASOS_108_DAY_2014_2014_2015_SMA.js"></script>
+</head>
+<body>
+<div id="chart" style="width:800px; height:400px;"></div>
+<script>
+    
+// 기온 데이터 변환 ----- (※1)
+var tempdata_c3 = [],
+    labels = ["x"], temp = ["기온"], sma = ["지수"];
+for (var i in temperature_data) {
+  var x = temperature_data[i];
+  labels.push(new Date("2014/"+x[0]));
+  temp.push(x[1]);
+  sma.push(x[2]);
+}
+tempdata_c3 = [labels, temp, sma];
+
+// 그래프 그리기 ---------- (※2)
+var chart = c3.generate({
+  bindto: '#chart',
+  data: {
+    x: 'x',
+    columns: tempdata_c3
+  },
+  axis: { // ------------(※3)
+    x: {
+      type: 'timeseries',
+      tick: { format: '%m/%d' }
+    }
+  },
+  grid: {
+    x: { show: false },
+    y: { show: true }
+  },
+  point: { show: false }
+});
+</script>
+</body></html>

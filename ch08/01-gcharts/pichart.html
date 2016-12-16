@@ -1,0 +1,48 @@
+﻿<html><head><meta chartset="utf-8">
+<title>원그래프</title>
+<!-- 라이브러리를 읽어들임 ======(※1) -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+
+// 어떤 그래프를 사용할지 지정 ------ (※2)  
+google.load('visualization', '1.0', {'packages':['corechart']});
+
+// 그래프API로드가 완료되면 실행할 수 있도록 이벤트를 지정 ---- (※3)  
+google.setOnLoadCallback(drawChart);
+
+// 차트 그리기를 실행 --- (※4)  
+function drawChart() {
+   // 데이터오브젝트를 작성 --- (※5)    
+   var data = new google.visualization.DataTable();
+
+	// 데이터의 컬럼을 지정 -------- (※6)    
+	data.addColumn('string', '인물');    
+	data.addColumn('number', '취득표');
+
+	// 실제 데이터를 지정 ------------- (※7)    
+	data.addRows([      
+		['송중기', 51],      
+		['강동원', 34],      
+		['유아인', 20],      
+		['김수현', 11],      
+		['이민호', 8],      
+		['김우빈', 4],    
+	]);
+
+	// 그래피의 옵션을 지정 ------- (※8)    
+	var opt = {      
+		'title': '인기투표',      
+		'width':  600,      
+		'height': 400,      
+		pieSliceText: 'label',      
+		legend: 'none'    
+	};
+	// 그래프를 표시 ------------- (※9)    
+	var chart = new google.visualization.PieChart(      
+		document.getElementById('chart_div'));    
+	chart.draw(data, opt);
+}
+</script> 
+</head><body>  
+<div id="chart_div"></div> 
+</body></html>

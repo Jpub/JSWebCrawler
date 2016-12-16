@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>문자 인식</title>
+</head>
+<body onload="init()" style="text-align:center;">
+<h1>수기 숫자 인식</h1>
+<div>
+  <canvas id="main_cv" width="300" height="300"
+       style="border: solid 1px gray"></canvas>
+  <canvas id="back_cv" width="28" height="28"
+       style="border:red solid 1px"></canvas>
+</div>
+<div>
+  예측:<span id="result" style="font-size:5em;"></span>
+</div>
+<div>
+  <button onclick="resetCanvas()"
+    style="font-size:1.5em;">
+    캔버스 리셋</button>
+</div>
+
+<script type="text/javascript">
+// API
+var API_PREDICT = location.href + "predict?";
+
+// 변수 
+var main_cv, ctx, main_r, back_cv, back_ctx;
+var isDown, s_pt;
+var border = 20;
+
+// 초기화 
+function init() {
+  // 캔버스 초기화 
+  main_cv = $("#main_cv");
+  ctx = main_cv.getContext("2d");
+  // 캔버스 위치와 사이즈 취득
+  main_r = main_cv.getBoundingClientRect();
+  // 리사이즈 처리용 이미지 
+  back_cv = $("#back_cv");
+  back_ctx = back_cv.getContext("2d");
+
+  // 마우스 이벤트 설정
+  main_cv.onmousedown = function (e) {
+    isDown = true;
+    s_pt = getXY(e);
+    ctx.beginPath();
+    ctx.lineWidth = border;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "white";
+    ctx.moveTo(s_pt.x, s_pt.y);
+  };
+  main_cv.onmousemove = function (e) {
+    if (!isDown) return;
+    var pt = getXY(e);
+    ctx.lineTo(pt.x, pt.y);
+    ctx.stroke();
+    s_pt = pt;
+    ctx.beginPath();
+    ctx.moveTo(pt.x, pt.y);
+  };
+  main_cv.onmouseup = function (e) {
+    if (!isDown) return;
+    isDown = false;
+    ctx.closePath();
+    recognize();
+  };
+  main_cv.onmouseout = main_cv.onmouseup;
+
+  // 화면 리셋
+  resetCanvas();
+}
+
+// 마우스 좌표 취득
+function getXY(e) {
+  var x = e.clientX;
+  var y = e.clientY;
+  x -= main_r.left;
+  y -= main_r.top;
+  return {"x":x, "y":y};
+}
+
+// 캔버스 초기화
+function resetCanvas() {
+  ctx.clearRect(0, 0, main_cv.width, main_cv.height);
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, main_cv.width, main_cv.height);
+  ctx.beginPath();
+  back_ctx.clearRect(0,0,back_cv.width,back_cv.height);
+  back_ctx.beginPath();
+  $("#result").innerHTML = "";
+  x_min = main_cv.width;
+  x_max = 0;
+  y_min = main_cv.height;
+  y_max = 0;
+}
+
+// 복사
+function copyToBack() {
+  back_ctx.fillStyle = "black";
+  back_ctx.fillRect(0,0,28,28);
+  back_ctx.drawImage(main_cv, 
+    0, 0, main_cv.width, main_cv.height,
+    0, 0, 28, 28);
+}
+
+// 패턴 작성
+function makePattern() {
+  //　이미지를 28x28로 리사이즈
+  copyToBack();
+  // 이미지 취득
+  var img = back_ctx.getImageData(0, 0, 28, 28).data;
+  var buf = [];
+  console.log(img);
+  for (var i = 0; i < 28 * 28; i++) {
+    var k = i * 4;
+    var r = img[k + 0]; // red
+    var g = img[k + 1]; // green
+    var b = img[k + 2]; // blue
+    var a = img[k + 3]; // alpha
+    var v = Math.floor((r + g + b) / 3.0);
+    // console.log(r,g,b,a,v);
+    buf.push(v);
+  }
+  return buf.join(",");
+}
+
+// 문자 인식 
+function recognize() {
+  var txt = makePattern();
+  // 서버에 송신
+  var uri = API_PREDICT + "p=" + txt;
+  $ajax(uri, function (xhr, txt) {
+    $("#result").innerHTML = "" + txt;
+    console.log("predict=" + txt);
+  });
+}
+
+// DOM 반환 
+function $(q) { return document.querySelector(q); }
+
+// Ajax함수
+function $ajax(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) { //통신완료
+      if (xhr.status == 200) { //HTTP 스테이터스200
+        callback(xhr, xhr.responseText);
+      }
+    }
+  };
+  xhr.send(''); // 통신 개시
+  return xhr;
+}
+</script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+  <link href="lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css">
+  <script src="lib/d3.min.js"></script>
+  
+<script src="lib/nvd3/nv.d3.js"></script>
+</head><body>
+<div id="chart"><svg></svg></div>
+<style> #chart text { font-size: 20px; } </style>
+
+<script>
+// 샘플 데이터
+var sample_data = [
+  { "label":"강동원", "value":94 },
+  { "label":"송중기", "value":88 },
+  { "label":"김수현", "value":62 },
+  { "label":"김우빈", "value":48 },
+  { "label":"유아인", "value":45 },
+  { "label":"이민호", "value":22 }
+];
+
+// 그래프 그리기 --- (※1)
+nv.addGraph( function() {
+  
+  // 파이차트 만들기 ---- (※2)
+  var chart = nv.models.pieChart()
+    .x(function(d) {
+      return d.label + "(" + d.value + ")";
+    })
+    .y(function(d) { return d.value })
+    .title("인기투표")         // 타이틀 지정
+    .showLabels(true)         // 라벨 표시 여부
+    .donutLabelsOutside(true) // 라벨의 외측 표시 여부
+    .padAngle(0.04)           // 각 항목의 padding 각도
+    .cornerRadius(8)          // 모서리 라운드 지정
+    .donut(true);             // 도넛형태 여부
+
+  // 파이차트를 실제로 표시하기 ---- (※3)
+  d3.select("#chart svg")
+    .style({ "width": "800px", "height": "600px" })
+    .datum(sample_data)
+    .transition().duration(1000)
+    .call(chart);
+  
+  // 타이틀 사이즈 보정
+  d3.select("#chart .nv-pie-title")
+    .style({ "font-size": "50px" });
+
+  return chart;
+} );
+</script>
+</body></html>

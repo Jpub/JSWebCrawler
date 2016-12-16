@@ -1,0 +1,12 @@
+{
+  "name": "simple-bot",
+  "version": "1.0.0",
+  "description": "simple bot chat server",
+  "main": "chat-server-bot.js",
+  "author": "kujirahand",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^2.0.35"
+  }
+}
+

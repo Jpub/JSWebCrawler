@@ -1,0 +1,26 @@
+﻿<books>
+  <book id="b1000">
+    <title>사과의 산</title>
+    <author>송중기</author>
+    <price value="1500"/>
+    <options>
+      <color>red</color>
+    </options>
+  </book>
+  <book id="b1001">
+    <title>귤의 노래</title>
+    <author>김수현</author>
+    <price value="1800"/>
+    <options>
+      <color>orange</color>
+    </options>
+  </book>
+  <book id="b1002">
+    <title>바나나의 언덕</title>
+    <author>배용준</author>
+    <price value="2400"/>
+    <options>
+      <color>yellow</color>
+    </options>
+  </book>
+</books>

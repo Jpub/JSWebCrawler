@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></head><body>
+<!-- D3.js를 읽어들임 -->
+<script type="text/javascript" src="./d3.min.js"></script>
+<script>
+  // 데이터 일람 ---- (※1)
+  var dataset = [30, 25, 44, 21, 30, 50];
+
+  // 그릴 영역을 만듬 --- (※2)
+  var svg_width = 600, svg_height = 400;
+  var bar_h = svg_height / dataset.length;
+  var bar_w = svg_width / 50; 
+  var svg = d3.select("body")
+    .append("svg")
+    .attr("width", svg_width)
+    .attr("height", svg_height);
+  
+  // 그래프를 그림  --- (※3)
+  svg.selectAll("rect")
+    .data(dataset)     // 그릴 데이터를 부여  ----- (※4)
+    .enter()           // 그림 그리기 시작 ----- (※5)
+    .append("rect")    // 무엇을 그릴지 지정 ----- (※6)
+    .attr({            // 추가할 속성을 지정 --- (※7)
+      x:      0,
+      y:      function(d, i) { return i * bar_h; },
+      width:  function (d) { return d * bar_w; },
+      height: (bar_h - 5),
+      fill:   "blue"
+    });
+</script>
+</body></html>
+

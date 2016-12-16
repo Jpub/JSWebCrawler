@@ -1,0 +1,32 @@
+﻿<html><head><meta chartset="utf-8">
+<!-- 라이브러리 로드  -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!-- 기온데이터 로드  -->
+<script type="text/javascript" src="temperature-data.js"></script>
+
+<script type="text/javascript">
+  // 라이브러리 로드 ---- (※1)
+  google.load('visualization', '1.0', {'packages':['corechart']});
+  google.setOnLoadCallback(drawChart);
+
+  // 차트 그리기를 수행
+  function drawChart() {
+
+    // 데이터 설정 ----- (※2)
+    var data = google.visualization.arrayToDataTable(tempData);
+
+    // 그래프의 옵션 설정---- (※3)
+    var options = {
+      'title': '최고기온과 최저기온',
+      'width':  600, 'height': 400,
+      'colors': ['red', 'blue'],
+      'pointShape': 'circle',
+      'pointSize': 5 
+    };
+    // 그래프 표시 ---- (※4)
+    var chart = new google.visualization.LineChart(
+      document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+</script>
+</head><body><div id="chart_div"></div></body></html>

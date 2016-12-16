@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></head><body>
+<!-- D3.js를 읽어들임  -->
+<script type="text/javascript" src="./d3.min.js"></script>
+<!-- 그림 스타일의 지정  -->
+<style>
+body { font-size: 10px; }
+.axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
+}
+.line {
+  fill:none; 
+  stroke:steelblue; 
+  stroke-width: 1.5px;
+}
+</style>
+<script>
+  // 데이터파일명의 지정
+  var CSVFILE = "./2014kion.csv";
+  // 날짜형식의 지정 ---- (※1)
+  var parseDate = d3.time.format("%Y/%m/%d").parse;
+  
+  // 화면사이즈의 지정
+  var gr_w = 600; // 그래프 폭
+  var gr_h = 400; // 그래프 높이
+  var margin = {top:40, right:20, bottom:50, left:20};
+  
+  // 스케일 지정 ---- (※2)
+  var x = d3.time.scale().range([0, gr_w]);
+  var y = d3.scale.linear().range([gr_h, 0]);
+  
+  // Axis의 지정---- (※3)
+  var x_axis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tickFormat(function(d) {
+      return (d.getMonth()+1) + "월";
+    });
+  var y_axis = d3.svg.axis().scale(y).orient("left").ticks(5);
+  
+  // SVG 태그의 추가 ---- (※4)
+  var svg = d3.select("body")
+    .append("svg")
+      .attr("width", gr_w + margin.left + margin.right)
+      .attr("height", gr_h + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+  
+  // 꺾은선 그래프의 작성 ---- (※5)
+  var line = d3.svg.line()
+    .x(function(d){ return x(d.date); })
+    .y(function(d){ return y(d.value); });
+      
+  // 데이터파일을 읽어들임 ---- (※6)
+  d3.csv(CSVFILE, function(err, data) {
+    if (err) {
+      alert("데이터 읽기 에러"); return;
+    }
+    // 날짜형식 등을 변경---- (※7)
+    data.forEach(function(d) {
+      d.date = parseDate(d.date);
+      d.value = parseFloat(d.value);
+    });
+    console.log(data);
+    
+    // 스케일 범위의 지정
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain([
+      d3.min(data, function(d) { return d.value; }),
+      d3.max(data, function(d) { return d.value; })
+    ]);
+    
+    // 꺾은선그래프를 그림 ---- (※8)
+    svg.append("path")
+      .datum(data)
+      .attr("class", "line")
+      .attr("d", line);
+    
+    // 눈금 축 추가
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(y_axis);
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + gr_h + ")")
+      .call(x_axis);
+  });
+</script>
+</body></html>
+

@@ -1,0 +1,12 @@
+{
+  "title"   : "Fruits Database",
+  "version" : 2.13,
+  "items" : [
+    {"name":"Tomato", "price":300},
+    {"name":"Banana", "price":170},
+    {"name":"Apple", "price":210},
+    {"name":"strawberry", "price":520},
+    {"name":"persimmon", "price":490},
+    {"name":"kiwi", "price":320}
+  ]
+}
