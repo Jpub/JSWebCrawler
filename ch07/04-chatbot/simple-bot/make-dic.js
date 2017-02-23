@@ -40,12 +40,12 @@ function insertKeywords(collection) {
     if (line.substr(0,1) == ";") continue; // 주석
     var cells = line.split(",");
     var key = trim(cells[0]);
-    var rank = parseInt(trim(cells[1]));
+    //var rank = parseInt(trim(cells[1]));
     var pat = trim(cells[2]);
     var msg = trim(cells[3]);
     // 삽입 ---- (※6)
     collection.insert({
-      "key": key, "rank": rank, 
+      "key": key, //"rank": rank, 
       "pattern": pat, "msg": msg
     }, function(err, result) {
       console.log(cnt+":inserted:", result.ops);
