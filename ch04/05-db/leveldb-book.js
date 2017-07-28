@@ -68,7 +68,9 @@ function dbinsert() {  // ---- ( ※ 1)
     console.log("put");
     for (var key in books) {
       var titles = books[key];
-      db.put(key, titles.join("\n"));
+      if (key != null && key != "") {
+          db.put(key, titles.join("\n"));
+      }
     }
 
     search();
