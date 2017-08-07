@@ -8,7 +8,7 @@ var fs = require('fs');
 var text = fs.readFileSync("sample.txt", "utf-8");
 
 // 형태소 분석하여 문장 생성 ---- (※1)
-mecab.parse(text, function(err, items) {
+mecab.parse(text, function(items) {
   var dic = makeDic(items);
   //console.log(dic);
   makeSentence(dic);
